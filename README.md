@@ -2,7 +2,7 @@
 
 This prototype demonstrates key UX improvements for the Knative func CLI, showcasing professional error handling, colorized output, and improved command organization.
 
-## 🎯 Key Improvements Demonstrated
+## Key Improvements Demonstrated
 
 ### 1. **Enhanced Error Messages**
 - Clear problem descriptions with actionable solutions
@@ -28,7 +28,7 @@ This prototype demonstrates key UX improvements for the Knative func CLI, showca
 - Clear error messages for conflicting flag combinations
 - Consistent flag naming patterns across commands
 
-## 🚀 Running the Demo
+##  Running the Demo
 
 ### Prerequisites
 ```bash
@@ -37,7 +37,7 @@ go version  # Requires Go 1.21+
 
 ### Installation
 ```bash
-cd ux-prototype
+cd knative-func-ux-prototype
 go mod tidy
 go build -o func-ux-demo
 ```
@@ -62,7 +62,7 @@ Shows enhanced error when no command is specified.
 ./func-ux-demo run --help  
 ./func-ux-demo deploy --help
 ```
-Demonstrates colorized help text with clear examples. Note: The `run --help` command shows the professional format from Demo 4.
+
 
 #### 3. **Smart Error Handling**
 ```bash
@@ -77,10 +77,17 @@ Demonstrates colorized help text with clear examples. Note: The `run --help` com
 ```bash
 ./func-ux-demo create my-function --language python
 ./func-ux-demo run --container --builder pack
-./func-ux-demo invoke --data '{"test": "data"}'
 ```
 
-## 📊 UX Improvements Comparison
+####  5.  Video Demo 
+ See the video here below 
+ 
+
+https://github.com/user-attachments/assets/cf17ffef-eab7-49e2-adc6-cbf377c705f7
+
+
+
+##  UX Improvements Comparison
 
 ### BEFORE (Current func CLI)
 ```bash
@@ -150,13 +157,13 @@ Error: Missing required language
 
 To fix this:
   • Choose from these options:
-    go          
-    node        
-    python      
-    quarkus     
-    rust        
-    springboot  
-    typescript  
+    go          - Fast, compiled language
+    node        - JavaScript runtime
+    python      - Popular scripting language
+    quarkus     - Java framework
+    rust        - Systems programming language
+    springboot  - Java web framework
+    typescript  - Typed JavaScript
 
   Example:
     func create --language python --template http myfunction
@@ -183,6 +190,25 @@ To fix this:
     func deploy --registry docker.io/myusername
 
   Run 'func config --help' to save registry settings permanently.
+
+$ func-ux-demo run --container --builder pack
+Starting function...
+  Mode: Container
+  Builder: pack
+  Address: localhost:8080
+
+Function running on localhost:8080
+  curl http://localhost:8080
+  func-ux-demo invoke
+
+$ func-ux-demo invoke --data '{"test":"data"}'
+Invoking function: http://localhost:8080
+  Data: {"test":"data"}
+  Content-Type: application/json
+
+Response received:
+  Status: 200 OK
+  Body: {"message": "Hello, World!"}
 
 $ func-ux-demo
 Error: Command required
@@ -239,7 +265,7 @@ EXAMPLES
 For more options, run: func run --help-advanced
 ```
 
-## 🎨 Color Coding System
+##  Color Coding System
 
 The prototype implements a professional color system:
 
@@ -260,7 +286,7 @@ This prototype demonstrates patterns that can be integrated into the actual func
 4. **Smart Validation**: Add intelligent flag conflict detection and auto-correction
 5. **Progress Feedback**: Provide clear status updates during operations
 
-## 📈 Expected Impact
+##  Expected Impact
 
 Based on this prototype, implementing these UX improvements would:
 
@@ -270,7 +296,7 @@ Based on this prototype, implementing these UX improvements would:
 - **Enhance Consistency**: Standardized patterns across all commands
 - **Better Accessibility**: Color coding with fallbacks for different terminals
 
-## 🔧 Technical Implementation Notes
+##  Technical Implementation Notes
 
 - Built with **cobra** CLI framework (same as func CLI)
 - Uses **fatih/color** for cross-platform color support
