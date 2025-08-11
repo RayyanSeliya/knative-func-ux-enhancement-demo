@@ -46,9 +46,15 @@ go build -o func-ux-demo
 
 #### 1. **Main Help (Workflow Overview)**
 ```bash
-./func-ux-demo
+./func-ux-demo help
 ```
 Shows improved command organization with workflow-based grouping.
+
+#### 1b. **Root Command Error**
+```bash
+./func-ux-demo
+```
+Shows enhanced error when no command is specified.
 
 #### 2. **Enhanced Command Help**
 ```bash
@@ -56,15 +62,15 @@ Shows improved command organization with workflow-based grouping.
 ./func-ux-demo run --help  
 ./func-ux-demo deploy --help
 ```
-Demonstrates colorized help text with clear examples.
+Demonstrates colorized help text with clear examples. Note: The `run --help` command shows the professional format from Demo 4.
 
 #### 3. **Smart Error Handling**
 ```bash
 # Enhanced error messages with actionable guidance
-./func-ux-demo error-demo missing-function
-./func-ux-demo error-demo invalid-flag
-./func-ux-demo error-demo missing-registry
-./func-ux-demo error-demo flag-conflict
+./func-ux-demo invoke                          # Demo 1: Better error for missing function
+./func-ux-demo run --invalid-flag             # Demo 2: Better invalid flag handling  
+./func-ux-demo create                         # Demo 3: Better missing language error
+./func-ux-demo deploy                         # Demo 5: Better registry error handling
 ```
 
 #### 4. **Improved Success Feedback**
@@ -81,46 +87,163 @@ Demonstrates colorized help text with clear examples.
 $ func invoke
 Error: '/path/to/dir' does not contain an initialized function
 
-$ func run --builder=pack
-# Runs on host instead of container (confusing)
+$ func run --invalid-flag
+Error: unknown flag: --invalid-flag
+Usage:
+  func run [flags]
+...
+
+$ func create
+Error: Required flag "language" not set.
+Available language runtimes are:
+  go
+  node
+  python
+  quarkus
+  rust
+  springboot
+  typescript
 
 $ func deploy  
 Error: Required flag "registry" not set.
+
+$ func
+# Shows basic help without workflow organization
 ```
 
 ### AFTER (Enhanced UX)
 ```bash
 $ func-ux-demo invoke
-✗ Error: No function to invoke
+Error: No function found in current directory
 
-  No target specified and not in a function directory.
+  This directory does not contain a function project.
 
-💡 Suggestions:
-  • Use --target to specify a deployed function URL
-  • Run from a function directory to invoke locally  
-  • Start local function with 'func-ux-demo run'
+To fix this:
+  • Create a new function:    func create --language go --template http myfunction
+  • Go to existing function:  cd /path/to/your/function
+  • Specify function path:    func invoke --path /path/to/function
 
-$ func-ux-demo run --builder pack
-⚠️  Pack builder requires container mode
-   Automatically enabling --container=true
-✓ Function running on localhost:8080
+  Run 'func create --help' to learn about creating functions.
+
+$ func-ux-demo run --invalid-flag
+Error: Unknown flag '--invalid-flag'
+
+  The flag '--invalid-flag' is not recognized for this command.
+
+To fix this:
+  • Use --help to see available flags
+  • Did you mean one of these?
+    --image          Set function image name
+    --insecure       Allow insecure connections
+
+  Common flags for 'func run':
+    -t, --container  Run in container
+    -r, --registry   Set registry
+    -v, --verbose    Show detailed output
+
+  Run 'func run --help' to see all available options.
+
+$ func-ux-demo create
+Error: Missing required language
+
+  You need to specify which programming language to use.
+
+To fix this:
+  • Choose from these options:
+    go          
+    node        
+    python      
+    quarkus     
+    rust        
+    springboot  
+    typescript  
+
+  Example:
+    func create --language python --template http myfunction
+
+  Run 'func languages' to see detailed language information.
 
 $ func-ux-demo deploy
-✗ Error: Registry required for deployment
+Error: Container registry required
 
-  Container registry must be specified to deploy functions.
+  You need to specify where to store your function's container image.
 
-💡 Suggestions:
-  • Add registry flag: --registry ghcr.io/myorg
-  • Set environment variable: export FUNC_REGISTRY=ghcr.io/myorg
-  • Configure in func.yaml: registry: ghcr.io/myorg
+To fix this:
+  • Set registry using:
+    • Command line:    func deploy --registry docker.io/yourusername
+    • Environment:     export FUNC_REGISTRY=docker.io/yourusername
+    • Interactive mode: func deploy --confirm
+
+  Popular registries:
+    • Docker Hub:      docker.io/yourusername
+    • GitHub:          ghcr.io/yourusername
+    • Google Cloud:    gcr.io/your-project-id
+
+  Example:
+    func deploy --registry docker.io/myusername
+
+  Run 'func config --help' to save registry settings permanently.
+
+$ func-ux-demo
+Error: Command required
+
+  You need to specify a command to run.
+
+To fix this:
+  • Available commands:
+    create   - Create a new function project
+    run      - Run a function locally
+    deploy   - Deploy function to Kubernetes cluster
+    invoke   - Invoke function with test data
+    help     - Show detailed help information
+
+  Examples:
+    ./func-ux-demo create --language python
+    ./func-ux-demo run --help
+    ./func-ux-demo help
+
+$ func-ux-demo run --help
+NAME
+    func run - Run a function locally
+
+USAGE
+    func run [OPTIONS]
+
+DESCRIPTION
+    Run a function locally for development and testing.
+
+BASIC OPTIONS
+    -t, --container              Run function in container (default: true)
+    -r, --registry REGISTRY      Container registry namespace
+    -v, --verbose               Show detailed output
+
+BUILD OPTIONS
+        --build [auto|true|false]   Control function building (default: auto)
+    -b, --builder BUILDER          Builder type: host, pack, s2i (default: pack)
+
+ADVANCED OPTIONS
+    -e, --env KEY=VALUE         Set environment variables
+    -i, --image IMAGE           Override image name
+    -p, --path PATH             Function directory (default: current)
+
+EXAMPLES
+    # Run function normally
+    func run
+
+    # Force rebuild and run
+    func run --build=true
+
+    # Run on host (Go only)
+    func run --container=false
+
+For more options, run: func run --help-advanced
 ```
 
 ## 🎨 Color Coding System
 
 The prototype implements a professional color system:
 
-- **🔴 Error Messages**: Red with clear problem identification
+- **🔴 Error Messages**: Red with clear problem identification (no emoji, just "Error:" prefix)
 - **🟡 Warnings**: Yellow for important notices and next steps
 - **🟢 Success**: Green for confirmations and completed actions
 - **🔵 Technical Info**: Blue for flags, parameters, and technical details
